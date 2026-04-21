@@ -45,3 +45,24 @@ std::string roomTypeToString(RoomType type);
  * None.
  */
 void printRoomSummary(const Room& room);
+
+/*
+ * What it does:
+ * Prints a simple visual dungeon map using connected room markers.
+ * Inputs:
+ * currentFloor - the floor where the player is currently located.
+ * finalFloor - the last floor of the dungeon.
+ * Outputs:
+ * None.
+ */
+void printDungeonMap(int currentFloor, int finalFloor);
+
+/*
+ * What it does:
+ * Prints a simple room scene preview based on the room type.
+ * Inputs:
+ * room - the room whose scene will be displayed.
+ * Outputs:
+ * None.
+ */
+void printRoomScene(const Room& room);

@@ -1,8 +1,14 @@
+#include <cstdlib>
+#include <ctime>
 #include <iostream>
 #include <limits>
 #include <string>
 
-#include "game.h"
+#include "enemy.h"
+#include "event.h"
+#include "item.h"
+#include "map.h"
+#include "player.h"
 
 using namespace std;
 
@@ -14,9 +20,31 @@ enum class Difficulty {
 
 enum class MainMenuOption {
     StartGame = 1,
-    LoadGame = 2,
-    Help = 3,
-    Exit = 4
+    Exit = 2
+};
+
+enum class GameAction {
+    ExploreRoom = 1,
+    ViewStatus = 2,
+    UsePotion = 3,
+    ReturnToMenu = 4
+};
+
+enum class BattleAction {
+    Attack = 1,
+    Defend = 2,
+    UsePotion = 3
+};
+
+struct GameSession {
+    Player player;
+    Difficulty difficulty;
+    int currentFloor;
+    int finalFloor;
+    int potionCount;
+    int potionHealAmount;
+    bool quitToMainMenu;
+    bool clearedDungeon;
 };
 
 /*
@@ -46,9 +74,7 @@ void printTitle() {
 void printMainMenu() {
     cout << "Main Menu\n";
     cout << "1. Start New Game\n";
-    cout << "2. Load Game\n";
-    cout << "3. Help\n";
-    cout << "4. Exit\n";
+    cout << "2. Exit\n";
 }
 
 /*
@@ -64,6 +90,37 @@ void printDifficultyMenu() {
     cout << "1. Easy\n";
     cout << "2. Normal\n";
     cout << "3. Hard\n";
+}
+
+/*
+ * What it does:
+ * Prints the available actions while exploring the dungeon.
+ * Inputs:
+ * None.
+ * Outputs:
+ * None.
+ */
+void printGameActionMenu() {
+    cout << "\nChoose Your Action\n";
+    cout << "1. Explore Current Room\n";
+    cout << "2. View Player Status\n";
+    cout << "3. Use Potion\n";
+    cout << "4. Return to Main Menu\n";
+}
+
+/*
+ * What it does:
+ * Prints the available battle actions.
+ * Inputs:
+ * None.
+ * Outputs:
+ * None.
+ */
+void printBattleActionMenu() {
+    cout << "\nBattle Actions\n";
+    cout << "1. Attack\n";
+    cout << "2. Defend\n";
+    cout << "3. Use Potion\n";
 }
 
 /*
@@ -107,6 +164,23 @@ int readMenuChoice(int minOption, int maxOption) {
 
 /*
  * What it does:
+ * Seeds the random number generator once for the program.
+ * Inputs:
+ * None.
+ * Outputs:
+ * None.
+ */
+void seedRandomOnce() {
+    static bool isSeeded = false;
+
+    if (!isSeeded) {
+        srand(static_cast<unsigned int>(time(nullptr)));
+        isSeeded = true;
+    }
+}
+
+/*
+ * What it does:
  * Converts a numeric difficulty choice into a Difficulty enum.
  * Inputs:
  * choice - the difficulty menu choice entered by the user.
@@ -122,6 +196,18 @@ Difficulty chooseDifficulty(int choice) {
         default:
             return Difficulty::Hard;
     }
+}
+
+/*
+ * What it does:
+ * Returns the numeric value of a Difficulty enum.
+ * Inputs:
+ * difficulty - the difficulty to convert.
+ * Outputs:
+ * Returns 1, 2, or 3 depending on the difficulty.
+ */
+int difficultyToLevel(Difficulty difficulty) {
+    return static_cast<int>(difficulty);
 }
 
 /*
@@ -147,46 +233,478 @@ string difficultyToString(Difficulty difficulty) {
 
 /*
  * What it does:
- * Shows a short help page for the player.
+ * Returns the number of dungeon floors for the chosen difficulty.
  * Inputs:
- * None.
+ * difficulty - the selected difficulty level.
  * Outputs:
- * None.
+ * Returns the total number of floors in the current run.
  */
-void showHelp() {
-    cout << "\nHelp\n";
-    cout << "- Choose 'Start New Game' to begin a new run.\n";
-    cout << "- Choose a difficulty before entering the dungeon.\n";
-    cout << "- Future modules can add combat, inventory, map, and save logic.\n";
-    cout << "- This main file is the central control point for the game flow.\n\n";
+int getFinalFloor(Difficulty difficulty) {
+    switch (difficulty) {
+        case Difficulty::Easy:
+            return 3;
+        case Difficulty::Normal:
+            return 4;
+        case Difficulty::Hard:
+            return 5;
+        default:
+            return 4;
+    }
 }
 
 /*
  * What it does:
- * Placeholder for starting a new game after choosing difficulty.
+ * Returns a short room description for a room type.
+ * Inputs:
+ * type - the room type to describe.
+ * floorNumber - the current floor number.
+ * Outputs:
+ * Returns a themed description string.
+ */
+string getRoomDescription(RoomType type, int floorNumber) {
+    switch (type) {
+        case RoomType::Entrance:
+            return "The dungeon entrance is quiet, but the darkness ahead feels alive.";
+        case RoomType::Battle:
+            return "Floor " + to_string(floorNumber) +
+                   " echoes with danger and the sound of weapons scraping stone.";
+        case RoomType::Treasure:
+            return "A dusty chamber glitters with coins and forgotten supplies.";
+        case RoomType::Rest:
+            return "A calm room with old campfire ashes offers a short moment of safety.";
+        case RoomType::Boss:
+            return "A massive gate opens. The ruler of the dungeon is waiting inside.";
+        default:
+            return "An unfamiliar room stretches before you.";
+    }
+}
+
+/*
+ * What it does:
+ * Creates a room for the current floor based on progress in the dungeon.
+ * Inputs:
+ * floorNumber - the floor currently being explored.
+ * finalFloor - the last floor of the dungeon.
+ * Outputs:
+ * Returns a Room with type and description.
+ */
+Room createRoomForFloor(int floorNumber, int finalFloor) {
+    if (floorNumber == 1) {
+        Room room = createStartingRoom();
+        room.description = getRoomDescription(RoomType::Entrance, floorNumber);
+        return room;
+    }
+
+    if (floorNumber == finalFloor) {
+        Room room;
+        room.floorNumber = floorNumber;
+        room.type = RoomType::Boss;
+        room.description = getRoomDescription(RoomType::Boss, floorNumber);
+        return room;
+    }
+
+    Room room;
+    room.floorNumber = floorNumber;
+
+    int roomRoll = rand() % 3;
+    if (roomRoll == 0) {
+        room.type = RoomType::Battle;
+    } else if (roomRoll == 1) {
+        room.type = RoomType::Treasure;
+    } else {
+        room.type = RoomType::Rest;
+    }
+
+    room.description = getRoomDescription(room.type, floorNumber);
+    return room;
+}
+
+/*
+ * What it does:
+ * Prints a summary of the current run state.
+ * Inputs:
+ * session - the current game session data.
+ * Outputs:
+ * None.
+ */
+void printRunSummary(const GameSession& session) {
+    cout << "\n========== Adventure Status ==========\n";
+    cout << "Difficulty: " << difficultyToString(session.difficulty) << '\n';
+    cout << "Current Floor: " << session.currentFloor
+         << "/" << session.finalFloor << '\n';
+    cout << "Potions: " << session.potionCount << '\n';
+    printPlayerStatus(session.player);
+}
+
+/*
+ * What it does:
+ * Uses one potion if the player has any and is not already at full health.
+ * Inputs:
+ * session - the current game session data.
+ * Outputs:
+ * Returns true if a potion was used, otherwise false.
+ */
+bool usePotion(GameSession& session) {
+    if (session.potionCount <= 0) {
+        cout << "You do not have any potions left.\n";
+        return false;
+    }
+
+    if (session.player.currentHealth >= session.player.maxHealth) {
+        cout << "Your health is already full.\n";
+        return false;
+    }
+
+    session.potionCount--;
+    session.player.currentHealth += session.potionHealAmount;
+
+    if (session.player.currentHealth > session.player.maxHealth) {
+        session.player.currentHealth = session.player.maxHealth;
+    }
+
+    cout << "You used a potion and recovered "
+         << session.potionHealAmount << " HP.\n";
+    cout << "Remaining Potions: " << session.potionCount << '\n';
+    return true;
+}
+
+/*
+ * What it does:
+ * Creates the initial game session state for a new game.
+ * Inputs:
+ * difficulty - the selected difficulty level.
+ * Outputs:
+ * Returns a fully initialized GameSession.
+ */
+GameSession createNewSession(Difficulty difficulty) {
+    Item starterPotion = createStarterPotion();
+    GameSession session;
+    session.player = createDefaultPlayer("Adventurer", difficultyToLevel(difficulty));
+    session.difficulty = difficulty;
+    session.currentFloor = 1;
+    session.finalFloor = getFinalFloor(difficulty);
+    session.potionCount = 2;
+    session.potionHealAmount = starterPotion.healAmount;
+    session.quitToMainMenu = false;
+    session.clearedDungeon = false;
+    return session;
+}
+
+/*
+ * What it does:
+ * Prints the introduction for a new dungeon run.
+ * Inputs:
+ * session - the current game session data.
+ * Outputs:
+ * None.
+ */
+void printAdventureIntro(const GameSession& session) {
+    Item starterPotion = createStarterPotion();
+
+    cout << "\nStarting a new game on "
+         << difficultyToString(session.difficulty) << " difficulty...\n";
+    cout << "Your goal is to survive " << session.finalFloor
+         << " floors and defeat the dungeon boss.\n";
+    cout << "You begin with " << session.potionCount << " potions.\n\n";
+    printItemSummary(starterPotion);
+    cout << '\n';
+}
+
+/*
+ * What it does:
+ * Creates an enemy for the current room and floor.
+ * Inputs:
+ * session - the current game session data.
+ * roomType - the type of room being explored.
+ * Outputs:
+ * Returns an Enemy configured for the encounter.
+ */
+Enemy createEncounterEnemy(const GameSession& session, RoomType roomType) {
+    Enemy enemy = createEnemyForDifficulty(difficultyToLevel(session.difficulty));
+    const string enemyNames[] = {"Skeleton Guard", "Shadow Bat", "Cave Goblin"};
+    enemy.name = enemyNames[rand() % 3];
+
+    enemy.health += (session.currentFloor - 1) * 8;
+    enemy.attack += session.currentFloor;
+    enemy.goldReward += session.currentFloor * 3;
+
+    if (roomType == RoomType::Boss) {
+        enemy.name = "Dungeon Warden";
+        enemy.health += 35;
+        enemy.attack += 5;
+        enemy.goldReward += 20;
+    }
+
+    return enemy;
+}
+
+/*
+ * What it does:
+ * Calculates damage dealt by the player this turn.
+ * Inputs:
+ * session - the current game session data.
+ * Outputs:
+ * Returns the amount of damage dealt to an enemy.
+ */
+int calculatePlayerDamage(const GameSession& session) {
+    return session.player.attack + (rand() % 5);
+}
+
+/*
+ * What it does:
+ * Calculates damage dealt by the enemy this turn.
+ * Inputs:
+ * session - the current game session data.
+ * enemy - the enemy taking the turn.
+ * defended - whether the player defended this round.
+ * Outputs:
+ * Returns the amount of damage dealt to the player.
+ */
+int calculateEnemyDamage(const GameSession& session, const Enemy& enemy, bool defended) {
+    int baseDamage = enemy.attack + (rand() % 4) - session.player.defense;
+
+    if (defended) {
+        baseDamage -= 4;
+    }
+
+    if (baseDamage < 1) {
+        baseDamage = 1;
+    }
+
+    return baseDamage;
+}
+
+/*
+ * What it does:
+ * Runs a single battle encounter until either the player or the enemy is defeated.
+ * Inputs:
+ * session - the current game session data.
+ * enemy - the enemy being fought.
+ * isBoss - whether the encounter is the final boss battle.
+ * Outputs:
+ * Returns true if the player wins, otherwise false.
+ */
+bool runBattleEncounter(GameSession& session, Enemy enemy, bool isBoss) {
+    cout << "\n========== ";
+    if (isBoss) {
+        cout << "Boss Battle";
+    } else {
+        cout << "Battle";
+    }
+    cout << " ==========\n";
+    printEnemyStatus(enemy);
+
+    while (session.player.currentHealth > 0 && enemy.health > 0) {
+        bool defendedThisTurn = false;
+
+        cout << "\n" << session.player.name << " HP: "
+             << session.player.currentHealth << "/" << session.player.maxHealth << '\n';
+        cout << enemy.name << " HP: " << enemy.health << '\n';
+        printBattleActionMenu();
+
+        BattleAction action =
+            static_cast<BattleAction>(readMenuChoice(1, 3));
+
+        switch (action) {
+            case BattleAction::Attack: {
+                int damage = calculatePlayerDamage(session);
+                enemy.health -= damage;
+                if (enemy.health < 0) {
+                    enemy.health = 0;
+                }
+                cout << "You attack " << enemy.name
+                     << " for " << damage << " damage.\n";
+                break;
+            }
+            case BattleAction::Defend:
+                defendedThisTurn = true;
+                cout << "You defend and prepare to reduce the next hit.\n";
+                break;
+            case BattleAction::UsePotion:
+                usePotion(session);
+                break;
+        }
+
+        if (enemy.health <= 0) {
+            break;
+        }
+
+        int enemyDamage = calculateEnemyDamage(session, enemy, defendedThisTurn);
+        session.player.currentHealth -= enemyDamage;
+        if (session.player.currentHealth < 0) {
+            session.player.currentHealth = 0;
+        }
+
+        cout << enemy.name << " attacks and deals "
+             << enemyDamage << " damage.\n";
+    }
+
+    if (session.player.currentHealth <= 0) {
+        cout << "\nYou were defeated by " << enemy.name << ".\n";
+        return false;
+    }
+
+    session.player.gold += enemy.goldReward;
+    cout << "\nYou defeated " << enemy.name << " and earned "
+         << enemy.goldReward << " gold.\n";
+
+    if (isBoss) {
+        session.clearedDungeon = true;
+    }
+
+    return true;
+}
+
+/*
+ * What it does:
+ * Resolves a treasure room and rewards the player.
+ * Inputs:
+ * session - the current game session data.
+ * Outputs:
+ * None.
+ */
+void resolveTreasureRoom(GameSession& session) {
+    int goldFound = 12 + (rand() % 10) + session.currentFloor * 2;
+    bool foundPotion = (rand() % 100) < 45;
+
+    session.player.gold += goldFound;
+    cout << "You found a treasure chest with " << goldFound << " gold.\n";
+
+    if (foundPotion) {
+        session.potionCount++;
+        cout << "You also found an extra potion.\n";
+    }
+}
+
+/*
+ * What it does:
+ * Resolves a rest room and restores health to the player.
+ * Inputs:
+ * session - the current game session data.
+ * Outputs:
+ * None.
+ */
+void resolveRestRoom(GameSession& session) {
+    int healAmount = 15 + (rand() % 11);
+    session.player.currentHealth += healAmount;
+
+    if (session.player.currentHealth > session.player.maxHealth) {
+        session.player.currentHealth = session.player.maxHealth;
+    }
+
+    cout << "You take a short rest and recover " << healAmount << " HP.\n";
+}
+
+/*
+ * What it does:
+ * Resolves the selected room and applies its result to the current run.
+ * Inputs:
+ * session - the current game session data.
+ * room - the room being explored.
+ * Outputs:
+ * Returns true if the floor is completed successfully, otherwise false.
+ */
+bool resolveRoom(GameSession& session, const Room& room) {
+    cout << "\nYou step into the room.\n";
+    cout << "Event: " << generateRandomEventText() << '\n';
+
+    switch (room.type) {
+        case RoomType::Entrance:
+            cout << "You gather your courage and move deeper into the dungeon.\n";
+            return true;
+        case RoomType::Battle: {
+            Enemy enemy = createEncounterEnemy(session, room.type);
+            return runBattleEncounter(session, enemy, false);
+        }
+        case RoomType::Treasure:
+            resolveTreasureRoom(session);
+            return true;
+        case RoomType::Rest:
+            resolveRestRoom(session);
+            return true;
+        case RoomType::Boss: {
+            Enemy enemy = createEncounterEnemy(session, room.type);
+            return runBattleEncounter(session, enemy, true);
+        }
+        default:
+            return true;
+    }
+}
+
+/*
+ * What it does:
+ * Runs the dungeon gameplay loop for a new session.
+ * Inputs:
+ * session - the current game session data.
+ * Outputs:
+ * None.
+ */
+void runGameLoop(GameSession& session) {
+    while (!session.quitToMainMenu &&
+           !session.clearedDungeon &&
+           session.player.currentHealth > 0) {
+        Room room = createRoomForFloor(session.currentFloor, session.finalFloor);
+        bool floorCompleted = false;
+
+        cout << "\n========================================\n";
+        cout << "            Floor " << session.currentFloor << '\n';
+        cout << "========================================\n";
+        printDungeonMap(session.currentFloor, session.finalFloor);
+        printRoomSummary(room);
+        printRoomScene(room);
+
+        while (!floorCompleted &&
+               !session.quitToMainMenu &&
+               session.player.currentHealth > 0) {
+            printGameActionMenu();
+
+            GameAction action =
+                static_cast<GameAction>(readMenuChoice(1, 4));
+
+            switch (action) {
+                case GameAction::ExploreRoom:
+                    floorCompleted = resolveRoom(session, room);
+                    if (floorCompleted && !session.clearedDungeon) {
+                        session.currentFloor++;
+                    }
+                    break;
+                case GameAction::ViewStatus:
+                    printRunSummary(session);
+                    break;
+                case GameAction::UsePotion:
+                    usePotion(session);
+                    break;
+                case GameAction::ReturnToMenu:
+                    session.quitToMainMenu = true;
+                    cout << "You leave the dungeon and return to the main menu.\n";
+                    break;
+            }
+        }
+    }
+
+    if (session.clearedDungeon) {
+        cout << "\nYou defeated the Dungeon Warden and escaped successfully!\n";
+        cout << "Final Gold: " << session.player.gold << '\n';
+    } else if (session.player.currentHealth <= 0) {
+        cout << "Game Over. Your journey ends on floor "
+             << session.currentFloor << ".\n";
+    }
+}
+
+/*
+ * What it does:
+ * Starts a new game session after choosing difficulty.
  * Inputs:
  * difficulty - the difficulty selected by the player.
  * Outputs:
  * None.
  */
 void startNewGame(Difficulty difficulty) {
-    cout << "\nStarting a new game on "
-         << difficultyToString(difficulty) << " difficulty...\n";
-    runNewGameDemo(static_cast<int>(difficulty));
-    cout << '\n';
-}
+    seedRandomOnce();
 
-/*
- * What it does:
- * Placeholder for loading previously saved progress.
- * Inputs:
- * None.
- * Outputs:
- * None.
- */
-void loadGame() {
-    cout << '\n';
-    runLoadGameDemo();
+    GameSession session = createNewSession(difficulty);
+    printAdventureIntro(session);
+    runGameLoop(session);
     cout << '\n';
 }
 
@@ -207,7 +725,7 @@ int main() {
         printMainMenu();
 
         MainMenuOption option =
-            static_cast<MainMenuOption>(readMenuChoice(1, 4));
+            static_cast<MainMenuOption>(readMenuChoice(1, 2));
 
         switch (option) {
             case MainMenuOption::StartGame: {
@@ -217,12 +735,6 @@ int main() {
                 startNewGame(difficulty);
                 break;
             }
-            case MainMenuOption::LoadGame:
-                loadGame();
-                break;
-            case MainMenuOption::Help:
-                showHelp();
-                break;
             case MainMenuOption::Exit:
                 cout << "\nThanks for playing. Goodbye!\n";
                 isRunning = false;
