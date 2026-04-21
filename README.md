@@ -22,13 +22,11 @@
 This project is a text-based dungeon-crawling RPG where players explore a multi-floor dungeon, encounter random events, battle enemies and bosses, collect items, purchase gear from shops, and aim to defeat the final dragon boss.
 
 ## Features Implemented
-
-Fill in this section after development.
-
-- Feature 1:
-- Feature 2:
-- Feature 3:
-- Feature 4:
+- Feature 1 : Three difficulty levels: Easy / Normal / Hard
+- Feature 2 : Multi-floor dungeon progression 
+- Feature 3 : Turned-based combat system with attack, item use and flee mechanics
+- Feature 4 : Random room events (enemy, treasure, shop
+- Feature 5 : Player level-up system with increasing stats
 
 ## Course Requirement Mapping
 
