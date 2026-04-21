@@ -2,21 +2,19 @@
 
 ## Team Members
 1. Yu Wei - Student ID 
-2. Ma Xiaoyu - Student ID
-3. Yu Renhan - Student ID 
-4. Cai Yuxuan - Student ID 
-5. Wang Leshen - Student ID 
-
-自己填ID
+2. Ma Xiaoyu - 3036481664
+3. Yu Renhan - 3036481511
+4. Cai Yuxuan - 3036483208 
+5. Wang Leshen - 3036481949
 
 ## Division of Work
-- [Student name] : Main flow and integration
-- [Student name] : Map and random events
-- [Student name] : Battle and enemies
-- [Student name] : Player, inventory and items
-- [Student name] : Save/load system and documentation 
-
-这只是初步的分工
+- Yu Wei : 
+- Ma Xiaoyu : 
+- Yu Renhan : 
+- Cai Yuxuan : Battle system
+  Turn-based battle logic, player/enemy interaction.
+  Files: battle.cpp/h
+- Wang Leshen :  
 
 ## Game Description
 This project is a text-based dungeon-crawling RPG where players explore a multi-floor dungeon, encounter random events, battle enemies and bosses, collect items, purchase gear from shops, and aim to defeat the final dragon boss.
