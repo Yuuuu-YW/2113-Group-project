@@ -4,11 +4,11 @@
 
 Replace this section with your actual team information.
 
-1. Name - Student ID - Responsibility
-2. Name - Student ID - Responsibility
-3. Name - Student ID - Responsibility
-4. Name - Student ID - Responsibility
-5. Name - Student ID - Responsibility
+1. Name - Student ID - Main flow and integration
+2. Name - Student ID - Map and random events
+3. Name - Student ID - Battle and enemies
+4. Name - Student ID - Player, inventory and items
+5. Name - Student ID - Save/load system and documentation
 
 ## Game Description
 
