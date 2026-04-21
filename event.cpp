@@ -14,17 +14,10 @@ using namespace std;
  * Returns a string describing the event.
  */
 string generateRandomEventText() {
-    static bool isSeeded = false;
-    const string events[] = {
-        "You hear footsteps in the dark corridor.",
-        "A hidden chest glitters beside the wall.",
-        "A trap clicks under your feet, but nothing happens yet."
-    };
-
-    if (!isSeeded) {
-        srand(static_cast<unsigned int>(time(nullptr)));
-        isSeeded = true;
-    }
-
-    return events[rand() % 3];
+    /*
+     * TODO:
+     * Expand this into multiple event types with real gameplay effects.
+     * For now, keep only one sample event so the event module remains a framework.
+     */
+    return "You hear footsteps in the dark corridor.";
 }

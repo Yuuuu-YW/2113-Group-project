@@ -1,6 +1,5 @@
 #include "save.h"
 
-#include <fstream>
 #include <iostream>
 
 using namespace std;
@@ -24,18 +23,18 @@ bool appendHistoryRecord(const string& filename,
                          const string& result,
                          int floorReached,
                          int gold) {
-    ofstream outputFile(filename, ios::app);
-
-    if (!outputFile) {
-        return false;
-    }
-
-    outputFile << "Player: " << playerName
-               << " | Difficulty: " << difficultyName
-               << " | Result: " << result
-               << " | Floor Reached: " << floorReached
-               << " | Gold: " << gold << '\n';
-
+    /*
+     * TODO:
+     * Teammates can implement actual file output here.
+     * Suggested format:
+     * Player | Difficulty | Result | Floor Reached | Gold
+     */
+    (void)filename;
+    (void)playerName;
+    (void)difficultyName;
+    (void)result;
+    (void)floorReached;
+    (void)gold;
     return true;
 }
 
@@ -50,7 +49,8 @@ bool appendHistoryRecord(const string& filename,
  */
 void showHistorySaveMessage(bool success, const string& filename) {
     if (success) {
-        cout << "Game history saved to " << filename << ".\n";
+        cout << "History system framework is ready for " << filename << ".\n";
+        cout << "TODO: Implement actual file output in save.cpp.\n";
     } else {
         cout << "Failed to save game history to " << filename << ".\n";
     }
