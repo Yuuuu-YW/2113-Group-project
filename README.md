@@ -61,6 +61,8 @@ Explain how your project satisfies each requirement.
 - Difficulty affects player stats and enemy strength
 - Used in: player.cpp, enemy.cpp
 
+搬运AI
+
 ## File Structure
 
 ```text
@@ -106,7 +108,7 @@ If you do use any, list them here and explain what they are for.
 - Prepare a short demonstration video before submission.
 
 ## Problems to be discussed
-- Game content and structure (一些设定：dungeon game 难度，有没有last boss，通关条件，
+- 
 
 
 
