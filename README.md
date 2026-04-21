@@ -2,98 +2,66 @@
 
 ## Team Members
 
-Please replace the placeholders below with your actual names and student IDs.
+Replace this section with your actual team information.
 
-1. Member 1 - Main flow and integration
-2. Member 2 - Map and random events
-3. Member 3 - Battle and enemies
-4. Member 4 - Player, inventory, and items
-5. Member 5 - Save/load system and documentation
+1. Name - Student ID - Responsibility
+2. Name - Student ID - Responsibility
+3. Name - Student ID - Responsibility
+4. Name - Student ID - Responsibility
+5. Name - Student ID - Responsibility
 
-## Project Description
+## Game Description
 
-This project is a text-based dungeon adventure game written in C++ for the
-ENGG1340 / COMP2113 course project.
+Write a short introduction to your game here.
 
-The player explores a dungeon through the terminal, encounters random events,
-fights enemies, collects items, and aims to survive until the end of the run.
-The project is designed as a modular console game so that different teammates
-can work on separate files without frequently changing the same code.
+Suggested points:
+- What kind of game is it?
+- What is the player's goal?
+- What makes your version interesting?
 
-## Current Progress
+## Features Implemented
 
-The current version is a project skeleton with:
+Fill in this section after development.
 
-- a main menu
-- difficulty selection
-- input validation
-- placeholder game flow
-- placeholder module integration for player, map, events, battle, items, and save/load
-- a `Makefile` for compilation
+- Feature 1:
+- Feature 2:
+- Feature 3:
+- Feature 4:
 
-This version is intended to provide a stable starting point for team
-development. More gameplay logic will be implemented in later commits.
+## Course Requirement Mapping
 
-## Planned Features
+Explain how your project satisfies each requirement.
 
-- Multiple difficulty levels: Easy, Normal, Hard
-- Random dungeon events
-- Turn-based battles
-- Enemy system
-- Player stats and health system
-- Item and inventory system
-- Save and load system
-- Boss encounter or final stage
-
-## Coding Requirements Mapping
-
-This project is planned to satisfy the course requirements in the following way:
-
-1. Generation of random events
-   Random room events will be generated in the event module.
-2. Data structures for storing data
-   Structs and collections will be used for players, enemies, rooms, and items.
-3. Dynamic memory management
-   Dynamic memory will be used when handling game objects and expandable data.
-4. File input/output
-   The save/load module will read and write game progress to files.
-5. Program codes in multiple files
-   The program is already split into multiple `.cpp` and `.h` files.
-6. Multiple difficulty levels
-   The player can choose different difficulty levels from the main menu.
+1. Generation of random events:
+2. Data structures for storing data:
+3. Dynamic memory management:
+4. File input/output:
+5. Program codes in multiple files:
+6. Multiple difficulty levels:
 
 ## File Structure
 
 ```text
-main.cpp      - main menu and program entry
-game.cpp/h    - integration layer for game flow
-player.cpp/h  - player data and status
-enemy.cpp/h   - enemy data
-battle.cpp/h  - battle logic
-map.cpp/h     - dungeon room and map logic
-event.cpp/h   - random event logic
-item.cpp/h    - items and inventory-related helpers
-save.cpp/h    - save and load logic
+main.cpp      - main menu and game flow
+game.cpp/h    - integration helpers
+player.cpp/h  - player module
+enemy.cpp/h   - enemy module
+battle.cpp/h  - battle module
+map.cpp/h     - map and room module
+event.cpp/h   - event module
+item.cpp/h    - item module
+save.cpp/h    - history record module
 Makefile      - build instructions
+README.md     - project description
 ```
 
-## How To Compile
-
-Use the following command in the project directory:
+## Compilation
 
 ```bash
 make
 ```
 
-This will generate the executable:
-
-```bash
-./dungeon_game
-```
-
-## How To Run
-
-After compiling, run:
+## Execution
 
 ```bash
 ./dungeon_game
@@ -101,30 +69,26 @@ After compiling, run:
 
 ## Non-standard Libraries
 
-Currently, the project only uses standard C++ libraries and does not require
-additional installation.
+If you do not use any, write:
 
-## Collaboration Plan
+```text
+None
+```
 
-To reduce merge conflicts, each teammate should mainly work on different files:
+If you do use any, list them here and explain what they are for.
 
-- Member 1: `main.cpp` and integration with `game.cpp`
-- Member 2: `map.cpp`, `map.h`, `event.cpp`, `event.h`
-- Member 3: `battle.cpp`, `battle.h`, `enemy.cpp`, `enemy.h`
-- Member 4: `player.cpp`, `player.h`, `item.cpp`, `item.h`
-- Member 5: `save.cpp`, `save.h`, `README.md`
+## Division of Work
 
-Suggested workflow:
+Replace this section with your final contribution summary.
 
-1. Pull the latest code before starting work.
-2. Create or switch to your own feature branch.
-3. Only modify the files you are responsible for unless the team agrees.
-4. Commit with meaningful messages.
-5. Merge back into `main` only after testing.
+- Member 1:
+- Member 2:
+- Member 3:
+- Member 4:
+- Member 5:
 
 ## Notes
 
-- All functions should include comments describing what they do, their inputs,
-  and their outputs.
-- The final version should be able to compile on the academy server.
-- The team should also prepare a short demonstration video for submission.
+- Add function comments where needed.
+- Make sure the final version can compile on the academy server.
+- Prepare a short demonstration video before submission.
