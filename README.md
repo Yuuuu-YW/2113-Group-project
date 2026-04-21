@@ -5,7 +5,7 @@
 2. Ma Xiaoyu - Student ID
 3. Yu Renhan - Student ID 
 4. Cai Yuxuan - Student ID 
-5. Wang Leshen - Student ID
+5. Wang Leshen - Student ID 
 
 自己填ID
 
@@ -14,7 +14,7 @@
 - [Student name] : Map and random events
 - [Student name] : Battle and enemies
 - [Student name] : Player, inventory and items
-- [Student name] : Save/load system and documentation
+- [Student name] : Save/load system and documentation 
 
 这只是初步的分工
 
@@ -114,11 +114,11 @@ If you do use any, list them here and explain what they are for.
   游戏背景：地下城里盘踞着的魔物...
   难度分Easy/Normal/Hard，各个难度怎么设置难度的区分呢？是buff？还是怪的数值？
   通关条件：击败last boss
-  房间设置：battle，treasure， shop... 还能有些啥房间？
+  房间设置：battle，treasure， shop， trap... 还能有些啥房间？
   是只有几关还是说要多搞几层？   P.S.说实话我觉得可以多搞几层，每一层都独特的怪e.g.骷髅、哥布林
   关于关卡的命名（如果有多层的话建议按照1-1，1-2，2-1，2-2这样命名，参考元气骑士）
-  关卡之间的移动：大家觉得（1）按照一个确定的顺序到xx关 （2）玩家选择接下来进入的关卡类别 哪个比较好？（参考honkai：starails）
-- 
+  关卡之间的移动：大家觉得（1）按照一个确定的顺序到xx关 （2）玩家选择接下来进入的关卡类别 哪个比较好？
+  （参考honkai：starrails）
 
 
 
