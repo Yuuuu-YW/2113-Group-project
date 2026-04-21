@@ -10,6 +10,7 @@
 #include "map.h"
 #include "player.h"
 #include "save.h"
+#include "battle.h"
 
 using namespace std;
 
@@ -29,12 +30,6 @@ enum class GameAction {
     ViewStatus = 2,
     UsePotion = 3,
     ReturnToMenu = 4
-};
-
-enum class BattleAction {
-    Attack = 1,
-    Defend = 2,
-    UsePotion = 3
 };
 
 struct GameSession {
@@ -107,21 +102,6 @@ void printGameActionMenu() {
     cout << "2. View Player Status\n";
     cout << "3. Use Potion\n";
     cout << "4. Return to Main Menu\n";
-}
-
-/*
- * What it does:
- * Prints the available battle actions.
- * Inputs:
- * None.
- * Outputs:
- * None.
- */
-void printBattleActionMenu() {
-    cout << "\nBattle Actions\n";
-    cout << "1. Attack\n";
-    cout << "2. Defend\n";
-    cout << "3. Use Potion\n";
 }
 
 /*
@@ -441,43 +421,7 @@ Enemy createEncounterEnemy(const GameSession& session, RoomType roomType) {
 
 /*
  * What it does:
- * Calculates damage dealt by the player this turn.
- * Inputs:
- * session - the current game session data.
- * Outputs:
- * Returns the amount of damage dealt to an enemy.
- */
-int calculatePlayerDamage(const GameSession& session) {
-    return session.player.attack + (rand() % 5);
-}
-
-/*
- * What it does:
- * Calculates damage dealt by the enemy this turn.
- * Inputs:
- * session - the current game session data.
- * enemy - the enemy taking the turn.
- * defended - whether the player defended this round.
- * Outputs:
- * Returns the amount of damage dealt to the player.
- */
-int calculateEnemyDamage(const GameSession& session, const Enemy& enemy, bool defended) {
-    int baseDamage = enemy.attack + (rand() % 4) - session.player.defense;
-
-    if (defended) {
-        baseDamage -= 4;
-    }
-
-    if (baseDamage < 1) {
-        baseDamage = 1;
-    }
-
-    return baseDamage;
-}
-
-/*
- * What it does:
- * Runs a single battle encounter until either the player or the enemy is defeated.
+ * Runs a single battle encounter and applies the result to the current session.
  * Inputs:
  * session - the current game session data.
  * enemy - the enemy being fought.
@@ -486,62 +430,13 @@ int calculateEnemyDamage(const GameSession& session, const Enemy& enemy, bool de
  * Returns true if the player wins, otherwise false.
  */
 bool runBattleEncounter(GameSession& session, Enemy enemy, bool isBoss) {
-    cout << "\n========== ";
-    if (isBoss) {
-        cout << "Boss Battle";
-    } else {
-        cout << "Battle";
-    }
-    cout << " ==========\n";
-    printEnemyStatus(enemy);
+    bool playerWon = runBattle(session.player,
+                               enemy,
+                               session.potionCount,
+                               session.potionHealAmount,
+                               isBoss);
 
-    while (session.player.currentHealth > 0 && enemy.health > 0) {
-        bool defendedThisTurn = false;
-
-        cout << "\n" << session.player.name << " HP: "
-             << session.player.currentHealth << "/" << session.player.maxHealth << '\n';
-        cout << enemy.name << " HP: " << enemy.health << '\n';
-        printBattleActionMenu();
-
-        BattleAction action =
-            static_cast<BattleAction>(readMenuChoice(1, 3));
-
-        switch (action) {
-            case BattleAction::Attack: {
-                int damage = calculatePlayerDamage(session);
-                enemy.health -= damage;
-                if (enemy.health < 0) {
-                    enemy.health = 0;
-                }
-                cout << "You attack " << enemy.name
-                     << " for " << damage << " damage.\n";
-                break;
-            }
-            case BattleAction::Defend:
-                defendedThisTurn = true;
-                cout << "You defend and prepare to reduce the next hit.\n";
-                break;
-            case BattleAction::UsePotion:
-                usePotion(session);
-                break;
-        }
-
-        if (enemy.health <= 0) {
-            break;
-        }
-
-        int enemyDamage = calculateEnemyDamage(session, enemy, defendedThisTurn);
-        session.player.currentHealth -= enemyDamage;
-        if (session.player.currentHealth < 0) {
-            session.player.currentHealth = 0;
-        }
-
-        cout << enemy.name << " attacks and deals "
-             << enemyDamage << " damage.\n";
-    }
-
-    if (session.player.currentHealth <= 0) {
-        cout << "\nYou were defeated by " << enemy.name << ".\n";
+    if (!playerWon) {
         return false;
     }
 

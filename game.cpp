@@ -36,7 +36,8 @@ void runNewGameDemo(int difficultyLevel) {
     printRoomSummary(firstRoom);
     cout << "Event: " << eventText << '\n';
     cout << '\n';
-    showBattlePreview(player, enemy);
+    cout << "Battle module is ready to run a turn-based fight here.\n";
+    cout << enemy.name << " is waiting for the battle system.\n";
     cout << '\n';
     cout << "This is the integration module.\n";
     cout << "Later, teammates can replace these placeholders with real gameplay.\n";

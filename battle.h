@@ -5,11 +5,18 @@
 
 /*
  * What it does:
- * Prints a simple preview of a battle encounter.
+ * Runs one turn-based battle encounter.
  * Inputs:
- * player - the current player.
+ * player - the current player and battle participant.
  * enemy - the enemy the player will face.
+ * potionCount - the number of potions the player can use in battle.
+ * potionHealAmount - the amount of HP restored by one potion.
+ * isBoss - whether the encounter is a boss battle.
  * Outputs:
- * None.
+ * Returns true if the player wins, otherwise false.
  */
-void showBattlePreview(const Player& player, const Enemy& enemy);
+bool runBattle(Player& player,
+               Enemy& enemy,
+               int& potionCount,
+               int potionHealAmount,
+               bool isBoss);
