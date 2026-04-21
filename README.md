@@ -1,23 +1,25 @@
 # Dungeon Game: Text Quest
 
 ## Team Members
+1. Yu Wei - Student ID 
+2. Ma Xiaoyu - Student ID
+3. Yu Renhan - Student ID 
+4. Cai Yuxuan - Student ID 
+5. Wang Leshen - Student ID
 
-Replace this section with your actual team information.
+自己填ID
 
-1. Name - Student ID - Main flow and integration
-2. Name - Student ID - Map and random events
-3. Name - Student ID - Battle and enemies
-4. Name - Student ID - Player, inventory and items
-5. Name - Student ID - Save/load system and documentation
+## Division of Work
+- [Student name] : Main flow and integration
+- [Student name] : Map and random events
+- [Student name] : Battle and enemies
+- [Student name] : Player, inventory and items
+- [Student name] : Save/load system and documentation
+
+这只是初步的分工
 
 ## Game Description
-
-Write a short introduction to your game here.
-
-Suggested points:
-- What kind of game is it?
-- What is the player's goal?
-- What makes your version interesting?
+This project is a text-based dungeon-crawling RPG where players explore a multi-floor dungeon, encounter random events, battle enemies and bosses, collect items, purchase gear from shops, and aim to defeat the final dragon boss.
 
 ## Features Implemented
 
@@ -77,18 +79,14 @@ None
 
 If you do use any, list them here and explain what they are for.
 
-## Division of Work
-
-Replace this section with your final contribution summary.
-
-- Member 1:
-- Member 2:
-- Member 3:
-- Member 4:
-- Member 5:
-
 ## Notes
 
 - Add function comments where needed.
 - Make sure the final version can compile on the academy server.
 - Prepare a short demonstration video before submission.
+
+## Problems to be discussed
+- Game content and structure (一些设定：dungeon game 难度，有没有last boss，通关条件，
+
+
+
