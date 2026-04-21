@@ -41,11 +41,25 @@ Explain how your project satisfies each requirement.
 2. Data structures for storing data
 - Player struct : name,HP , attack, defense
 - Enemy struct : name, HP, attack, defense, reward
-- Used in : player.cpp, enemy.?
-3. Dynamic memory management:
-4. File input/output:
-5. Program codes in multiple files:
-6. Multiple difficulty levels:
+- vector<string> for inventory storage
+- Used in : player.cpp, enemy.h
+3. Dynamic memory management
+- Dynamic inventory using std::vector
+- Automatic memory management by standard library
+- No memory leaks, compatible with academy server
+- Used in: player.cpp, inventory system
+4. File input/output
+- Save game to save.txt
+- Load game from save.txt
+- Used in : save.cpp, save.h
+5. Program codes in multiple files
+- Separate .h and .cpp files for each module
+- Clear separation of game functions
+- Files : main, game, layer, enemy, battle, map, event, save
+6. Multiple difficulty levels
+- Players select Easy/Normal/Hard difficulty level at start
+- Difficulty affects player stats and enemy strength
+- Used in: player.cpp, enemy.cpp
 
 ## File Structure
 
