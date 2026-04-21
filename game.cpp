@@ -44,15 +44,14 @@ void runNewGameDemo(int difficultyLevel) {
 
 /*
  * What it does:
- * Runs a placeholder load-game flow and reports save-file status.
+ * Runs a placeholder history-system message.
  * Inputs:
  * None.
  * Outputs:
  * None.
  */
 void runLoadGameDemo() {
-    const string saveFileName = "save.txt";
-
-    cout << "========== Load Game ==========\n";
-    showLoadMessage(saveFileName);
+    cout << "========== History System ==========\n";
+    cout << "This project now writes completed runs to history.txt.\n";
+    cout << "The old save/load placeholder is no longer used.\n";
 }

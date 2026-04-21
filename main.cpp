@@ -9,6 +9,7 @@
 #include "item.h"
 #include "map.h"
 #include "player.h"
+#include "save.h"
 
 using namespace std;
 
@@ -597,6 +598,50 @@ void resolveRestRoom(GameSession& session) {
 
 /*
  * What it does:
+ * Returns the final result of the current run as text.
+ * Inputs:
+ * session - the current game session data.
+ * Outputs:
+ * Returns a result string for the history file.
+ */
+string getRunResultLabel(const GameSession& session) {
+    if (session.clearedDungeon) {
+        return "Victory";
+    }
+
+    if (session.player.currentHealth <= 0) {
+        return "Defeat";
+    }
+
+    return "Retreated";
+}
+
+/*
+ * What it does:
+ * Saves the final result of the current run to the history file.
+ * Inputs:
+ * session - the current game session data.
+ * Outputs:
+ * None.
+ */
+void saveRunToHistory(const GameSession& session) {
+    const string historyFileName = "history.txt";
+    const string resultLabel = getRunResultLabel(session);
+    const int floorReached =
+        session.clearedDungeon ? session.finalFloor : session.currentFloor;
+
+    bool saveSuccess = appendHistoryRecord(historyFileName,
+                                           session.player.name,
+                                           difficultyToString(session.difficulty),
+                                           resultLabel,
+                                           floorReached,
+                                           session.player.gold);
+
+    showHistorySaveMessage(saveSuccess, historyFileName);
+}
+
+/*
+ * What it does:
  * Resolves the selected room and applies its result to the current run.
  * Inputs:
  * session - the current game session data.
@@ -689,6 +734,8 @@ void runGameLoop(GameSession& session) {
         cout << "Game Over. Your journey ends on floor "
              << session.currentFloor << ".\n";
     }
+
+    saveRunToHistory(session);
 }
 
 /*
