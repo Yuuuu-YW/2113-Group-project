@@ -28,12 +28,20 @@ This project is a text-based dungeon-crawling RPG where players explore a multi-
 - Feature 4 : Random room events (enemy, treasure, shop
 - Feature 5 : Player level-up system with increasing stats
 
+需进一步讨论
+
 ## Course Requirement Mapping
 
 Explain how your project satisfies each requirement.
 
-1. Generation of random events:
-2. Data structures for storing data:
+1. Generation of random events
+- Random room types
+- Random enemy spawns based on the dungeon difficulty
+- Used in : map.cpp, event.cpp, enemy.cpp
+2. Data structures for storing data
+- Player struct : name,HP , attack, defense
+- Enemy struct : name, HP, attack, defense, reward
+- Used in : player.cpp, enemy.?
 3. Dynamic memory management:
 4. File input/output:
 5. Program codes in multiple files:
