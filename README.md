@@ -1,20 +1,28 @@
 # Dungeon Game: Text Quest
 
 ## Team Members
-1. Yu Wei - Student ID 
+1. Yu Wei - 3036483351 
 2. Ma Xiaoyu - 3036481664
 3. Yu Renhan - 3036481511
 4. Cai Yuxuan - 3036483208 
 5. Wang Leshen - 3036481949
 
 ## Division of Work
-- Yu Wei : 
-- Ma Xiaoyu : 
-- Yu Renhan : 
+- Yu Wei : Main & Game Integration
+  Main program, game loop, menu, difficulty selection, module integration.
+  Files: main.cpp, game.cpp/h
+- Ma Xiaoyu : Save/Load System & Documentation
+  File I/O for saving progress, README, project documentation.
+  Files: save.cpp/h, README.md
+- Yu Renhan : Enemies & Random Events
+  Enemy stats, spawn rules, room events, trap/treasure/shop triggers.
+  Files: enemy.cpp/h, event.cpp/h, map.cpp/h
 - Cai Yuxuan : Battle system
   Turn-based battle logic, player/enemy interaction.
   Files: battle.cpp/h
-- Wang Leshen :  
+- Wang Leshen : Player & Inventory/Items
+  Player stats, level up, inventory system, item effects.
+  Files: player.cpp/h, item.cpp/h
 
 ## Game Description
 This project is a text-based dungeon-crawling RPG where players explore a multi-floor dungeon, encounter random events, battle enemies and bosses, collect items, purchase gear from shops, and aim to defeat the final dragon boss.
@@ -25,8 +33,6 @@ This project is a text-based dungeon-crawling RPG where players explore a multi-
 - Feature 3 : Turned-based combat system with attack, item use and flee mechanics
 - Feature 4 : Random room events (enemy, treasure, shop
 - Feature 5 : Player level-up system with increasing stats
-
-需进一步讨论
 
 ## Course Requirement Mapping
 
