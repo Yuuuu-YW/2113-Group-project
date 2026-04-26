@@ -5,7 +5,6 @@
 #include <ctime>
 
 using namespace std;
-
 /*
 ================================================================================
 BATTLE SYSTEM RULES & MECHANICS (For README.md)
