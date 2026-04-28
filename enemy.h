@@ -1,30 +1,27 @@
-#pragma once
+#ifndef ENEMY_H
+#define ENEMY_H
 
 #include <string>
 
-struct Enemy {
-    std::string name;
-    int health;
-    int attack;
-    int goldReward;
+// Difficulty level for scaling enemy stats
+enum class Difficulty {
+    Easy,
+    Normal,
+    Hard
 };
 
-/*
- * What it does:
- * Creates a sample enemy that scales with difficulty.
- * Inputs:
- * difficultyLevel - the selected difficulty represented as 1, 2, or 3.
- * Outputs:
- * Returns an Enemy with basic combat stats.
- */
-Enemy createEnemyForDifficulty(int difficultyLevel);
+// Enemy structure – matches exactly what battle.cpp requires
+struct Enemy {
+    std::string name;    // Enemy display name
+    int health;          // Current health points
+    int attack;          // Attack power
+    int defense;         // Defense value
+};
 
-/*
- * What it does:
- * Prints enemy information to the terminal.
- * Inputs:
- * enemy - the enemy whose stats will be displayed.
- * Outputs:
- * None.
- */
-void printEnemyStatus(const Enemy& enemy);
+// Create a random normal enemy with scaled stats based on difficulty
+Enemy createNormalEnemy(Difficulty diff);
+
+// Create a boss enemy with increased stats scaled by difficulty
+Enemy createBossEnemy(Difficulty diff);
+
+#endif
