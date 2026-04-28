@@ -1,13 +1,25 @@
 #pragma once
 
 #include <string>
+#include "player.h"
+#include "enemy.h"
 
 /*
  * What it does:
- * Generates a sample random event description.
+ * Generates event text based on current level.
  * Inputs:
- * None.
+ * currentLevel (1, 2, 3)
  * Outputs:
- * Returns a string describing the event.
+ * Event description string.
  */
-std::string generateRandomEventText();
+std::string generateEventText(int currentLevel);
+
+/*
+ * What it does:
+ * Triggers the actual event (combat) for the current level.
+ * Inputs:
+ * currentLevel, difficulty (1=Easy,2=Normal,3=Hard), player reference, gameOver flag.
+ * Outputs:
+ * None.
+ */
+void triggerLevelEvent(int currentLevel, int difficulty, Player& player, bool& gameOver);
