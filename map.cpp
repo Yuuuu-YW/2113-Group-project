@@ -1,161 +1,102 @@
 #include "map.h"
+#include "item.h"
 
 #include <iostream>
+#include <sstream>
+#include <stdexcept>
 
-using namespace std;
-
-/*
- * What it does:
- * Creates the first room of the dungeon.
- * Inputs:
- * None.
- * Outputs:
- * Returns a Room with starter information.
- */
-Room createStartingRoom() {
-    Room room;
-    room.floorNumber = 1;
-    room.type = RoomType::Entrance;
-    room.description = "A cold stone hall with faint torchlight and two open paths.";
-    return room;
+// ============================================================
+// Helper: convert RoomType to its integer representation
+// ============================================================
+static int roomTypeToInt(RoomType t) {
+    return static_cast<int>(t);
 }
 
-/*
- * What it does:
- * Converts a room type into a display string.
- * Inputs:
- * type - the room type to convert.
- * Outputs:
- * Returns the room type name as text.
- */
-string roomTypeToString(RoomType type) {
+// Helper: convert integer back to RoomType.
+// Throws std::invalid_argument for unrecognized values.
+static RoomType intToRoomType(int v) {
+    switch (v) {
+        case 0: return RoomType::EMPTY;
+        case 1: return RoomType::BATTLE;
+        case 2: return RoomType::EVENT;
+        case 3: return RoomType::SHOP;
+        case 4: return RoomType::BOSS;
+        case 5: return RoomType::EXIT;
+        default:
+            throw std::invalid_argument("Unknown RoomType value: " +
+                                        std::to_string(v));
+    }
+}
+
+// ============================================================
+// Room constructor / destructor
+// ============================================================
+Room::Room(int id, RoomType type, const std::string& description, bool locked)
+    : id(id), type(type), description(description),
+      visited(false), locked(locked), cleared(false)
+{}
+
+// Destructor: free every item in the loot pile
+Room::~Room() {
+    for (int i = 0; i < (int)loot.size(); ++i) {
+        delete loot[i];
+    }
+    loot.clear();
+}
+
+// Transfer ownership of item to this room's loot pile
+void Room::addLoot(Item* item) {
+    if (item) loot.push_back(item);
+}
+
+// ---- Single-character label used in the map progress bar ----
+std::string Room::getLabel() const {
     switch (type) {
-        case RoomType::Entrance:
-            return "Entrance";
-        case RoomType::Battle:
-            return "Battle";
-        case RoomType::Treasure:
-            return "Treasure";
-        case RoomType::Rest:
-            return "Rest";
-        case RoomType::Boss:
-            return "Boss";
-        default:
-            return "Unknown";
+        case RoomType::EMPTY:  return "S";  // Start
+        case RoomType::BATTLE: return "B";  // Battle
+        case RoomType::EVENT:  return "E";  // Event
+        case RoomType::SHOP:   return "T";  // Shop (Trader)
+        case RoomType::BOSS:   return "!";  // Boss
+        case RoomType::EXIT:   return "X";  // eXit
+        default:               return "?";
     }
 }
 
-/*
- * What it does:
- * Prints a short summary of the current room.
- * Inputs:
- * room - the room to display.
- * Outputs:
- * None.
- */
-void printRoomSummary(const Room& room) {
-    cout << "Current Room: Floor " << room.floorNumber
-         << " (" << roomTypeToString(room.type) << ")\n";
-    cout << room.description << '\n';
+// ---- Full human-readable room type name ----
+std::string Room::getTypeName() const {
+    switch (type) {
+        case RoomType::EMPTY:  return "Empty Hall";
+        case RoomType::BATTLE: return "Battle Room";
+        case RoomType::EVENT:  return "Event Room";
+        case RoomType::SHOP:   return "Shop";
+        case RoomType::BOSS:   return "Boss Chamber";
+        case RoomType::EXIT:   return "Exit";
+        default:               return "Unknown";
+    }
 }
 
-/*
- * What it does:
- * Prints a simple visual dungeon map using connected room markers.
- * Inputs:
- * currentFloor - the floor where the player is currently located.
- * finalFloor - the last floor of the dungeon.
- * Outputs:
- * None.
- */
-void printDungeonMap(int currentFloor, int finalFloor) {
-    cout << "Dungeon Map\n";
 
-    for (int floor = 1; floor <= finalFloor; floor++) {
-        if (floor < currentFloor) {
-            cout << "[X]";
-        } else if (floor == currentFloor) {
-            cout << "[P]";
-        } else if (floor == finalFloor) {
-            cout << "[B]";
-        } else {
-            cout << "[ ]";
-        }
-
-        if (floor < finalFloor) {
-            cout << "---";
-        }
-    }
-
-    cout << '\n';
-
-    for (int floor = 1; floor <= finalFloor; floor++) {
-        cout << ' ' << floor << ' ';
-
-        if (floor < finalFloor) {
-            cout << "   ";
-        }
-    }
-
-    cout << '\n';
-    cout << "[P] = Player, [X] = Cleared, [B] = Boss\n";
+// ============================================================
+// GameMap constructor / destructor
+// ============================================================
+GameMap::GameMap(int level) : currentIndex(0), level(level) {
+    buildLevel(level);
 }
 
-/*
- * What it does:
- * Prints a simple room scene preview based on the room type.
- * Inputs:
- * room - the room whose scene will be displayed.
- * Outputs:
- * None.
- */
-void printRoomScene(const Room& room) {
-    cout << "Room Scene\n";
-
-    switch (room.type) {
-        case RoomType::Entrance:
-            cout << "+-------------------+\n";
-            cout << "| P             Door|\n";
-            cout << "|                   |\n";
-            cout << "|    Dungeon Gate   |\n";
-            cout << "+-------------------+\n";
-            break;
-        case RoomType::Battle:
-            cout << "+-------------------+\n";
-            cout << "| P             E   |\n";
-            cout << "|                   |\n";
-            cout << "|   Battle Room     |\n";
-            cout << "+-------------------+\n";
-            break;
-        case RoomType::Treasure:
-            cout << "+-------------------+\n";
-            cout << "| P             T   |\n";
-            cout << "|                   |\n";
-            cout << "|   Treasure Room   |\n";
-            cout << "+-------------------+\n";
-            break;
-        case RoomType::Rest:
-            cout << "+-------------------+\n";
-            cout << "| P             R   |\n";
-            cout << "|                   |\n";
-            cout << "|    Rest Area      |\n";
-            cout << "+-------------------+\n";
-            break;
-        case RoomType::Boss:
-            cout << "+-------------------+\n";
-            cout << "| P             B   |\n";
-            cout << "|                   |\n";
-            cout << "|    Boss Room      |\n";
-            cout << "+-------------------+\n";
-            break;
-        default:
-            cout << "+-------------------+\n";
-            cout << "| P                 |\n";
-            cout << "|                   |\n";
-            cout << "|   Unknown Room    |\n";
-            cout << "+-------------------+\n";
-            break;
+// Destructor: free every room
+GameMap::~GameMap() {
+    for (int i = 0; i < (int)rooms.size(); ++i) {
+        delete rooms[i];
     }
-
-    cout << "P = Player, E = Enemy, T = Treasure, R = Rest, B = Boss\n";
+    rooms.clear();
 }
+
+// ============================================================
+// buildLevel
+// Constructs the ordered room sequence for the given level.
+//
+// RoomDef is a plain-old-data helper struct used only in this
+// function to keep the level templates concise.  It is placed
+// inside an anonymous namespace so it is not visible outside
+// this translation unit.
+//
