@@ -1,33 +1,30 @@
-#pragma once
+#ifndef PLAYER_H
+#define PLAYER_H
 
 #include <string>
 
-struct Player {
-    std::string name;
-    int maxHealth;
-    int currentHealth;
-    int attack;
-    int defense;
-    int gold;
+// Difficulty level (same as enemy.h for consistency)
+enum class Difficulty {
+    Easy,
+    Normal,
+    Hard
 };
 
-/*
- * What it does:
- * Creates a default player profile for the chosen difficulty.
- * Inputs:
- * name - the player's display name.
- * difficultyLevel - the selected difficulty represented as 1, 2, or 3.
- * Outputs:
- * Returns a Player with starter stats.
- */
-Player createDefaultPlayer(const std::string& name, int difficultyLevel);
+// Player structure – matches what battle.cpp requires
+struct Player {
+    std::string name;         // Player name
+    int currentHealth;        // Current HP
+    int maxHealth;            // Maximum HP
+    int mp;                   // Current MP
+    int maxMp;                // Maximum MP
+    int attack;               // Attack power
+    int defense;              // Defense value
+};
 
-/*
- * What it does:
- * Prints the current player stats to the terminal.
- * Inputs:
- * player - the player whose stats will be displayed.
- * Outputs:
- * None.
- */
-void printPlayerStatus(const Player& player);
+// Initialize player with stats scaled by difficulty
+Player initializePlayer(std::string playerName, Difficulty diff);
+
+// Display player's current stats
+void showPlayerStatus(const Player& player);
+
+#endif
