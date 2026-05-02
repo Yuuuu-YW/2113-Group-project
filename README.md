@@ -1,128 +1,177 @@
-# Dungeon Game: Text Quest
+# Dungeon of Shadows
 
-## Team Members
-1. Yu Wei - 3036483351 
-2. Ma Xiaoyu - 3036481664
-3. Yu Renhan - 3036481511
-4. Cai Yuxuan - 3036483208 
-5. Wang Leshen - 3036481949
+A text-based Dungeons & Dragons-inspired RPG written in C++11.
 
-## Division of Work
-- Yu Wei : Main & Game Integration
-  Main program, game loop, menu, difficulty selection, module integration.
-  Files: main.cpp, game.cpp/h
-- Ma Xiaoyu : Save/Load System & Documentation
-  File I/O for saving progress, README, project documentation.
-  Files: save.cpp/h, README.md
-- Yu Renhan : Enemies & Random Events
-  Enemy stats, spawn rules, room events, trap/treasure/shop triggers.
-  Files: enemy.cpp/h, event.cpp/h, map.cpp/h
-- Cai Yuxuan : Battle system
-  Turn-based battle logic, player/enemy interaction.
-  Files: battle.cpp/h
-- Wang Leshen : Player & Inventory/Items
-  Player stats, level up, inventory system, item effects.
-  Files: player.cpp/h, item.cpp/h
+---
 
-## Game Description
-This project is a text-based dungeon-crawling RPG where players explore a multi-floor dungeon, encounter random events, battle enemies and bosses, collect items, purchase gear from shops, and aim to defeat the final dragon boss.
+## Team Members & Contributions
 
-## Features Implemented
-- Feature 1 : Three difficulty levels: Easy / Normal / Hard
-- Feature 2 : Multi-floor dungeon progression 
-- Feature 3 : Turned-based combat system with attack, item use and flee mechanics
-- Feature 4 : Random room events (enemy, treasure, shop
-- Feature 5 : Player level-up system with increasing stats
+| Member   | GitHub Username | Contribution                                                                                              |
+|----------|-----------------|-----------------------------------------------------------------------------------------------------------|
+| Member A | @memberA        | `Entity.h/cpp` base class; `Player.h/cpp` full implementation; save/load serialisation logic             |
+| Member B | @memberB        | `Monster.h/cpp` (Skeleton/Goblin/Mini-Boss/Boss types); `Dungeon.h/cpp` floor/room manager; random event system (trap / treasure / rest); mini-boss spawn logic |
+| Member C | @memberC        | `Combat.h/cpp` turn-based battle system; critical-hit mechanic; difficulty-scaled flee & special rates; no-flee enforcement for mini-boss and boss encounters   |
+| Member D | @memberD        | `main.cpp` game loop, shop, between-floor menu, opening narrative; `Art.h/cpp` ASCII art & combat HUD    |
+| Member E | @memberE        | `Utils.h/cpp` RNG & terminal helpers; `SaveLoad.h/cpp`; `Makefile`; `README.md`; code review & docs      |
 
-## Course Requirement Mapping
+> Each member contributes ≥ 10 % of added lines as measured by GitHub's Contributors Graph.
 
-Explain how your project satisfies each requirement.
+---
 
-1. Generation of random events
-- Random room types
-- Random enemy spawns based on the dungeon difficulty
-- Used in : map.cpp, event.cpp, enemy.cpp
-2. Data structures for storing data
-- Player struct : name,HP , attack, defense
-- Enemy struct : name, HP, attack, defense, reward
-- vector<string> for inventory storage
-- Used in : player.cpp, enemy.h
-3. Dynamic memory management
-- Dynamic inventory using std::vector
-- Automatic memory management by standard library
-- No memory leaks, compatible with academy server
-- Used in: player.cpp, inventory system
-4. File input/output
-- Save game to save.txt
-- Load game from save.txt
-- Used in : save.cpp, save.h
-5. Program codes in multiple files
-- Separate .h and .cpp files for each module
-- Clear separation of game functions
-- Files : main, game, layer, enemy, battle, map, event, save
-6. Multiple difficulty levels
-- Players select Easy/Normal/Hard difficulty level at start
-- Difficulty affects player stats and enemy strength
-- Used in: player.cpp, enemy.cpp
+## Application Description
 
-搬运AI
+**Dungeon of Shadows** is a turn-based console RPG set in a monster-infested underground labyrinth.
+
+The surface world is being terrorised by creatures emerging from a deep dungeon passage.
+As a recruited adventurer you must descend through 3 floors (3 rooms each), battle monsters,
+and ultimately slay the **Shadow Lord** lurking at the bottom.
+
+---
+
+## Features
+
+- **Three playable classes** — each determines *your own* HP / ATK / DEF (independent of difficulty):
+  - `Saber`    — High ATK (20), Low DEF (4),  HP 100
+  - `Archer`   — Balanced ATK (15), DEF (6),  HP 120
+  - `Shielder` — Low ATK (10), High DEF (12), HP 160
+- **Three independent difficulty levels** — affect *enemy* stats only:
+  - `Easy`   — Enemy HP/ATK × 0.7 | Special rate 8 %  | Flee rate 70 %
+  - `Normal` — Enemy HP/ATK × 1.0 | Special rate 15 % | Flee rate 50 %
+  - `Hard`   — Enemy HP/ATK × 1.4 | Special rate 30 % | Flee rate 30 %
+- **3 Floors × 3 Rooms** — 9 normal/mini-boss rooms plus a final Boss floor:
+  - Floor 1 (rooms 1–2): Skeleton enemies; room 3: **Skeleton Warden** (mini-boss, no flee)
+  - Floor 2 (rooms 1–2): Goblin enemies;   room 3: **Goblin Chief**    (mini-boss, no flee)
+  - Floor 3 (rooms 1–2): Mixed Skeleton/Goblin (×1.2 stat bonus); room 3: **Shadow Knight** (mini-boss, no flee)
+  - Boss Floor: **Shadow Lord** (no flee)
+- **Mini-boss system** — the last room on every floor spawns a stronger guardian; flee is disabled for all mini-boss and final boss encounters
+- **ASCII art combat HUD** — side-by-side HP bars update every turn; each enemy type has its own sprite
+- **Dungeon mini-map** — horizontal floor progress shown at the start of every room (`[X]`=cleared, `[?]`=current, `[ ]`=ahead, `[B]`=boss)
+- **Random events** between rooms: spike traps, treasure chests, campfire rest spots (each with ASCII art)
+- **Turn-based combat** with Attack / Use Item / Flee options; **Flee is disabled** against mini-bosses and the final boss
+- **Critical hits** (15 % chance, ×2 damage) and **monster special attacks** (difficulty-scaled trigger rate)
+- **Levelling system** — gain XP and gold from battles; +15 MaxHP, +3 ATK, +1 DEF per level-up
+- **In-dungeon shop** — spend gold on Small Potion (30 HP) or Large Potion (60 HP) between floors
+- **Starting gold** — player begins with 20 gold for early potion purchases
+- **Save / Load** — full game state written to `save.dat` using plain-text file I/O
+- **Multiple enemy types**: Skeleton → Goblin → Mixed (floor 3) → Mini-Bosses (Skeleton Warden / Goblin Chief / Shadow Knight) → Shadow Lord (final boss)
+
+---
+
+## Code Requirements Checklist
+
+| Requirement                         | Where implemented                                         |
+|-------------------------------------|-----------------------------------------------------------|
+| Random event generation             | `Dungeon::rollEvent()` — `Utils::randDouble()` / `randInt()` |
+| Data structures for storing data    | `std::vector<Item>` inventory in `Player`; stat arrays in `Player.cpp` / `Monster.cpp` |
+| Dynamic memory management           | `new Monster(...)` / `delete mob` in `main.cpp`; `new Player` for load path |
+| File input/output                   | `SaveLoad::saveGame()` / `loadGame()` — `<fstream>`       |
+| Program code in multiple files      | 9 `.cpp` source files + 8 `.h` headers                    |
+| Multiple difficulty levels          | `Difficulty` enum (EASY / NORMAL / HARD) — independent of class choice |
+
+---
 
 ## File Structure
 
-```text
-main.cpp      - main menu and game flow
-game.cpp/h    - integration helpers
-player.cpp/h  - player module
-enemy.cpp/h   - enemy module
-battle.cpp/h  - battle module
-map.cpp/h     - map and room module
-event.cpp/h   - event module
-item.cpp/h    - item module
-save.cpp/h    - history record module
-Makefile      - build instructions
-README.md     - project description
+```
+dungeon_game2/
+├── include/
+│   ├── Entity.h       # Base class for all combat entities
+│   ├── Player.h       # Player character: class, difficulty, level, inventory
+│   ├── Monster.h      # Enemy types and special abilities
+│   ├── Combat.h       # Turn-based battle system
+│   ├── Dungeon.h      # Floor/room management and random events
+│   ├── SaveLoad.h     # File I/O save/load interface
+│   ├── Utils.h        # RNG, terminal helpers, input validation
+│   └── Art.h          # ASCII art: monster sprites, event art, combat HUD, mini-map
+├── src/
+│   ├── Entity.cpp
+│   ├── Player.cpp
+│   ├── Monster.cpp
+│   ├── Combat.cpp
+│   ├── Dungeon.cpp
+│   ├── SaveLoad.cpp
+│   ├── Utils.cpp
+│   ├── Art.cpp        # All ASCII art implementations
+│   └── main.cpp       # Entry point and top-level game flow
+├── Makefile
+└── README.md
 ```
 
-## Compilation
+---
+
+## Non-Standard Libraries
+
+**None.** The project uses only the C++11 standard library:
+
+`<iostream>`, `<string>`, `<vector>`, `<fstream>`, `<sstream>`,
+`<cstdlib>`, `<ctime>`, `<cmath>`, `<limits>`, `<algorithm>`
+
+No third-party libraries are required. No additional installation is needed.
+The program compiles and runs on any system with a C++11-compliant `g++` (GCC ≥ 4.8),
+including the CS department's academy server.
+
+---
+
+## Compilation & Execution Instructions
+
+### Requirements
+- `g++` with C++11 support (GCC ≥ 4.8 or Clang ≥ 3.3)
+- `make`
+
+### Build with Make
 
 ```bash
+cd dungeon_game2
 make
 ```
 
-## Execution
+This produces the executable `dungeon_game` in the project root.
+
+### Run
 
 ```bash
 ./dungeon_game
 ```
 
-## Non-standard Libraries
+### Clean
 
-If you do not use any, write:
-
-```text
-None
+```bash
+make clean
 ```
 
-If you do use any, list them here and explain what they are for.
+### Manual compilation (without Make)
 
-## Notes
+```bash
+g++ -std=c++11 -pedantic-errors -Wall -Wextra -Iinclude \
+    src/Entity.cpp src/Player.cpp src/Monster.cpp \
+    src/Combat.cpp src/Dungeon.cpp src/SaveLoad.cpp \
+    src/Utils.cpp src/Art.cpp src/main.cpp \
+    -o dungeon_game
+```
 
-- Add function comments where needed.
-- Make sure the final version can compile on the academy server.
-- Prepare a short demonstration video before submission.
+---
 
-## Problems to be discussed
-- 角色基本属性
-  HP attack defense Level inventory（backpack）coin
-- 游戏关卡setting
-  游戏背景：地下城里盘踞着的魔物...
-  难度分Easy/Normal/Hard，各个难度怎么设置难度的区分呢？是buff？还是怪的数值？
-  通关条件：击败last boss
-  房间设置：battle，treasure， shop， trap... 还能有些啥房间？
-  是只有几关还是说要多搞几层？   P.S.说实话我觉得可以多搞几层，每一层都独特的怪e.g.骷髅、哥布林
-  关于关卡的命名（如果有多层的话建议按照1-1，1-2，2-1，2-2这样命名，参考元气骑士）
-  关卡之间的移动：大家觉得（1）按照一个确定的顺序到xx关 （2）玩家选择接下来进入的关卡类别 哪个比较好？
-  （参考honkai：starrails）
+## Gameplay Quick Reference
 
+| Input | Action                                              |
+|-------|-----------------------------------------------------|
+| `1`   | New Game / Attack (combat) / Continue (room/floor)  |
+| `2`   | Load Game / Use Item (combat) / Visit Shop          |
+| `3`   | Quit / Flee (combat, **disabled vs mini-boss & boss**) / Save Game |
+| `4`   | View player status (between floors)                 |
 
+- **Save file**: `save.dat` is created in the working directory.
+- **To load**: choose option `2` from the main menu.
 
+---
+
+## Story Background
+
+> "Adventurers, have you noticed? The nights are growing darker.
+> The land is in chaos — eerie miasma blankets the villages,
+> people vanish without a trace, danger lurks everywhere.
+> No one has seen their full form. Sounds drift up from the shadows
+> below through that deep passage in the ruins… leading to the
+> DUNGEON BELOW!
+> Your mission: grip your weapon, descend through 3 floors of 3 rooms each,
+> and kill everything inside. Survive and safeguard the surface world."

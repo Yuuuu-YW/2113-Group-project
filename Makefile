@@ -1,18 +1,29 @@
-CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Wextra -pedantic
-TARGET = dungeon_game
-SOURCES = main.cpp game.cpp player.cpp enemy.cpp item.cpp map.cpp event.cpp battle.cpp save.cpp
-OBJECTS = $(SOURCES:.cpp=.o)
+# Makefile for Dungeon of Shadows
+# Requires: g++ with C++11 support
+# Usage: make         -> build the game
+#        make clean   -> remove compiled files
 
-all: $(TARGET)
+CXX      = g++
+CXXFLAGS = -std=c++11 -pedantic-errors -Wall -Wextra -Iinclude
+TARGET   = dungeon_game
+SRCDIR   = src
+OBJDIR   = obj
 
-$(TARGET): $(OBJECTS)
-	$(CXX) $(CXXFLAGS) $(OBJECTS) -o $(TARGET)
+SRCS = $(wildcard $(SRCDIR)/*.cpp)
+OBJS = $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SRCS))
 
-%.o: %.cpp
+.PHONY: all clean
+
+all: $(OBJDIR) $(TARGET)
+
+$(OBJDIR):
+	mkdir -p $(OBJDIR)
+
+$(TARGET): $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $@ $^
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJECTS) $(TARGET)
-
-.PHONY: all clean
+	rm -rf $(OBJDIR) $(TARGET) save.dat
