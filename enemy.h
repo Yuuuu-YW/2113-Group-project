@@ -1,12 +1,30 @@
 #pragma once
 
-#include "player.h"
-#include "enemy.h"
+#include <string>
 
-// 触发房间事件（战斗/宝箱/治疗）
-void triggerEvent(int currentLevel, int difficulty, Player& player, bool& gameOver);
+struct Enemy {
+    std::string name;
+    int health;
+    int attack;
+    int goldReward;
+};
 
-// 是否能进下一关
-bool canMoveToNextLevel(int currentLevel);
+/*
+ * What it does:
+ * Creates a sample enemy that scales with difficulty.
+ * Inputs:
+ * difficultyLevel - the selected difficulty represented as 1, 2, or 3.
+ * Outputs:
+ * Returns an Enemy with basic combat stats.
+ */
+Enemy createEnemyForDifficulty(int difficultyLevel);
 
-原来的代码的一些问题：不要出现enemy！
+/*
+ * What it does:
+ * Prints enemy information to the terminal.
+ * Inputs:
+ * enemy - the enemy whose stats will be displayed.
+ * Outputs:
+ * None.
+ */
+void printEnemyStatus(const Enemy& enemy);

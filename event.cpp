@@ -1,64 +1,41 @@
 #include "event.h"
-#include "enemy.h"
-#include "battle.h"
-#include <iostream>
+
 #include <string>
 
 using namespace std;
 
 /*
  * What it does:
- * Generates event text based on current level.
+ * Generates event text based on the current floor.
  * Inputs:
- * currentLevel (1, 2, 3)
+ * currentLevel - the current dungeon floor.
  * Outputs:
- * Event description string.
+ * Returns an event description string.
  */
 string generateEventText(int currentLevel) {
     if (currentLevel == 1) {
         return "A Skeleton Guard blocks your path!";
     }
+
     if (currentLevel == 2) {
         return "A ferocious Goblin jumps out of the shadows!";
     }
-    if (currentLevel == 3) {
-        return "The Giant Boss appears! The final battle begins!";
+
+    if (currentLevel >= 3) {
+        return "A dangerous presence fills the room. Prepare for battle!";
     }
+
     return "You walk into a dark, quiet room.";
 }
 
 /*
  * What it does:
- * Triggers combat event for each level (skeleton → goblin → giant boss).
+ * Generates a generic event text for compatibility with older calls.
  * Inputs:
- * currentLevel, difficulty, player, gameOver.
- * Outputs:
  * None.
+ * Outputs:
+ * Returns an event description string.
  */
-void triggerLevelEvent(int currentLevel, int difficulty, Player& player, bool& gameOver) {
-    // Get enemy based on level and difficulty
-    Enemy enemy = createEnemyForDifficulty(difficulty);
-
-    // Override enemy name based on level
-    if (currentLevel == 1) {
-        enemy.name = "Skeleton Guard";
-    }
-    else if (currentLevel == 2) {
-        enemy.name = "Goblin";
-    }
-    else if (currentLevel == 3) {
-        enemy.name = "Giant (BOSS)";
-    }
-
-    // Show enemy status
-    printEnemyStatus(enemy);
-
-    // Start battle (handled by battle module)
-    gameOver = startBattle(player, enemy);
-
-    // If player wins, give gold
-    if (!gameOver) {
-        player.gold += enemy.goldReward;
-        cout << "\nYou earned " << enemy.goldReward << " gold!\n";
-    }
+string generateRandomEventText() {
+    return generateEventText(1);
 }

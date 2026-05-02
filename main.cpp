@@ -546,7 +546,7 @@ void saveRunToHistory(const GameSession& session) {
  */
 bool resolveRoom(GameSession& session, const Room& room) {
     cout << "\nYou step into the room.\n";
-    cout << "Event: " << generateRandomEventText() << '\n';
+    cout << "Event: " << generateEventText(session.currentFloor) << '\n';
 
     switch (room.type) {
         case RoomType::Entrance:
