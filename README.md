@@ -8,11 +8,11 @@ A text-based Dungeons & Dragons-inspired RPG written in C++11.
 
 | Member   | GitHub Username | Contribution                                                                                              |
 |----------|-----------------|-----------------------------------------------------------------------------------------------------------|
-| Member A | @memberA        | `Entity.h/cpp` base class; `Player.h/cpp` full implementation; save/load serialisation logic             |
-| Member B | @memberB        | `Monster.h/cpp` (Skeleton/Goblin/Mini-Boss/Boss types); `Dungeon.h/cpp` floor/room manager; random event system (trap / treasure / rest); mini-boss spawn logic |
-| Member C | @memberC        | `Combat.h/cpp` turn-based battle system; critical-hit mechanic; difficulty-scaled flee & special rates; no-flee enforcement for mini-boss and boss encounters   |
-| Member D | @memberD        | `main.cpp` game loop, shop, between-floor menu, opening narrative; `Art.h/cpp` ASCII art & combat HUD    |
-| Member E | @memberE        | `Utils.h/cpp` RNG & terminal helpers; `SaveLoad.h/cpp`; `Makefile`; `README.md`; code review & docs      |
+| Cai Yuxuan  | 3036483208   | `Entity.h/cpp` base class; `Player.h/cpp` full implementation; save/load serialisation logic             |
+| Yu Renhan   | 3036481511   | `Monster.h/cpp` (Skeleton/Goblin/Mini-Boss/Boss types); `Dungeon.h/cpp` floor/room manager; random event system (trap / treasure / rest); mini-boss spawn logic |
+| Wang Leshen | 3036481949   | `Combat.h/cpp` turn-based battle system; critical-hit mechanic; difficulty-scaled flee & special rates; no-flee enforcement for mini-boss and boss encounters   |
+| Ma Xiaoyu   | 3036481664   | `main.cpp` game loop, shop, between-floor menu, opening narrative; `Art.h/cpp` ASCII art & combat HUD    |
+| Yu Wei      | 3036483351   | `Utils.h/cpp` RNG & terminal helpers; `SaveLoad.h/cpp`; `Makefile`; `README.md`; code review & docs      |
 
 > Each member contributes ≥ 10 % of added lines as measured by GitHub's Contributors Graph.
 
