@@ -1,0 +1,5 @@
+obj/
+dungeon_game
+save.dat
+history.txt
+.DS_Store
