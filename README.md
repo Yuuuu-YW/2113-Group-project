@@ -87,31 +87,111 @@ There is no level cap. In long runs, a high-level Shielder becomes nearly unkill
 
 ---
 
-## Enemies
+## Enemies & Bosses
+
+> All stats listed are base values at **Normal** difficulty. Easy = ×0.7, Hard = ×1.4.
+
+---
 
 ### Normal Enemies
 
-| Enemy    | Floor  | Behaviour                                                      |
-|----------|--------|----------------------------------------------------------------|
-| Skeleton | 1      | Basic attacker. Low HP, low ATK. Occasional **Bone Rattle** (stuns briefly). |
-| Goblin   | 2      | Faster and sneakier. May use **Sneak Strike** for bonus damage.|
-| Mixed    | 3      | Both types appear, with stats boosted ×1.2 from floor scaling. |
+#### Skeleton — Floor 1
+
+| HP | ATK | Special Attack |
+|----|-----|----------------|
+| 30 |  6  | Bone Rattle    |
+
+Long before the Shadow Lord stirred, the dungeon claimed its first victims: explorers, treasure hunters, and soldiers sent to investigate the ruins. They died in the dark, far from home, and were never recovered. The Shadow Lord found them useful.
+
+Animated by shadow-energy seeping through the stone, these skeletons retain no memory of their former lives — only a hollow, mechanical drive to destroy anything warm and breathing. They do not feel pain. They do not tire. They advance in silence until either you or they stop moving.
+
+Their special move, **Bone Rattle**, is a sudden convulsive shudder that sends bone fragments flying and throws off your footing, dealing moderate damage. If you look closely at a fallen skeleton, you may notice the rusted remnants of equipment — a belt buckle, a boot clasp — hinting that it was once an adventurer just like you.
+
+---
+
+#### Goblin — Floor 2
+
+| HP | ATK | Special Attack |
+|----|-----|----------------|
+| 36 |  7  | Sneak Strike   |
+
+Unlike the skeletons, Goblins came to the dungeon willingly. Driven out of the surface forests by expanding settlements, a tribe of goblins discovered the dungeon entrance decades ago and moved in. The Shadow Lord's influence warped them over generations — they grew more aggressive, more territorial, and far less inclined to retreat.
+
+They have colonised Floor 2 entirely, turning stone corridors into a warren of sleeping nooks, crude forges, and trap-rigged passages. The gold they hoard is mostly stripped from adventurers who reached Floor 2 and got no further.
+
+Their special move, **Sneak Strike**, is their signature trick: the goblin feigns a stumble, ducks inside your guard, and drives a hidden blade upward into an unprotected spot for heavy bonus damage. It is infuriatingly difficult to anticipate, even knowing it is coming.
+
+---
+
+#### Mixed Enemies — Floor 3
+
+| HP (approx.) | ATK (approx.) | Stat Bonus   |
+|-------------|--------------|--------------|
+| ×1.2 scaled | ×1.2 scaled  | Both types   |
+
+Floor 3 is where the dungeon's two factions collide. Neither skeletons nor goblins respect territorial lines, and the constant skirmishing has thinned both populations to only their strongest survivors. What remains are veterans — skeletons that have been shattered and reassembled multiple times, goblins with scars layered over older scars.
+
+The Shadow Lord's influence is densest this deep. Both creature types are faster, hit harder, and absorb more punishment than anything above. All Floor 3 enemies carry a **×1.2 stat bonus** on top of difficulty scaling. Do not enter Floor 3 without at least one Large Potion in reserve.
+
+---
 
 ### Mini-Bosses *(flee disabled)*
 
-Each mini-boss is the guardian of its floor. You cannot run — defeat it or die trying.
+The last room of every floor is sealed by a Mini-Boss — a creature that has claimed dominance over its floor through power and the Shadow Lord's favour. These encounters cannot be escaped. The stairs will not appear until the guardian falls.
 
-| Mini-Boss         | Floor | HP  | ATK | Special Attack          |
-|-------------------|-------|-----|-----|-------------------------|
-| Skeleton Warden   |   1   |  90 |  11 | **Bone Slam** (+8 dmg)  |
-| Goblin Chief      |   2   | 110 |  14 | **War Cry** (+12 dmg)   |
-| Shadow Knight     |   3   | 130 |  17 | **Dark Slash** (+16 dmg)|
+---
 
-> Stats shown are base values (Normal difficulty). Easy = ×0.7, Hard = ×1.4.
+#### Skeleton Warden — Floor 1, Room 3
 
-### Final Boss *(flee disabled)*
+| HP | ATK | Special Attack       |
+|----|-----|----------------------|
+| 90 |  11 | Bone Slam (+8 dmg)   |
 
-**The Shadow Lord** — ancient, patient, and utterly merciless. It has watched every adventurer who ever entered this dungeon. It knows your every move before you make it. Defeat it to end the curse and free Aelindra.
+The Skeleton Warden was never an adventurer. It was the dungeon's original jailer — a towering figure who managed the cells and passages of this place when it was still inhabited by the living. Its iron-shod frame and sheer size set it apart from every other skeleton on Floor 1, and in death those qualities have been preserved and amplified by shadow-energy.
+
+The Warden does not rattle or claw. It *slams*. Each blow carries the weight of centuries of patient waiting. Its special move, **Bone Slam**, drives both fists into the floor and sends a shockwave erupting beneath your feet, dealing its full ATK plus 8 bonus damage. On Hard difficulty this single strike can exceed 23 damage — enough to finish off a low-HP Saber player in two hits.
+
+The Warden has stood at this post since the dungeon sealed itself. It has seen every adventurer who reached Room 3 of Floor 1. None of them made it past.
+
+---
+
+#### Goblin Chief — Floor 2, Room 3
+
+| HP  | ATK | Special Attack      |
+|-----|-----|---------------------|
+| 110 |  14 | War Cry (+12 dmg)   |
+
+The Goblin Chief is the self-declared king of the Goblin Warrens — a creature that clawed its way to dominance through years of brutal infighting, bearing the scars to prove it. It wears a dented crown hammered from stolen coins and carries a weapon that is technically a repurposed dungeon gate hinge, wielded with surprising expertise.
+
+Where ordinary goblins are sneaky and opportunistic, the Chief is simply aggressive. It wants you dead, and it is not shy about it. Its special move, **War Cry**, is a bellowing roar that shakes the stone walls and sends the Chief charging forward in a frenzy, dealing its ATK plus 12 bonus damage. On Normal difficulty this can deal over 26 damage in a single turn.
+
+The Chief's subjects are terrified of it. The Shadow Lord finds it useful precisely because it is already violent by nature — no corruption required.
+
+---
+
+#### Shadow Knight — Floor 3, Room 3
+
+| HP  | ATK | Special Attack         |
+|-----|-----|------------------------|
+| 130 |  17 | Dark Slash (+16 dmg)   |
+
+The Shadow Knight is something different from the skeletons and goblins above. It was once a knight — a decorated soldier sent by an earlier king to investigate the dungeon, long before the current crisis. He descended alone, by choice, convinced he could handle whatever was down there. He was wrong, but the Shadow Lord saw something worth keeping in him: discipline, skill, and an unbreakable will.
+
+It did not reanimate him the way it reanimates skeletons. It *kept* him — intact, aware, and utterly hollowed out. The Shadow Knight remembers being human. It no longer cares. It serves the dark because there is nothing left of it that serves anything else.
+
+Its special move, **Dark Slash**, channels shadow-energy through its blade in a sweeping arc that deals ATK plus 16 bonus damage. On Hard difficulty this single strike can exceed 39 damage. It is the most dangerous enemy in the dungeon outside the final boss, and it fights with the precision of a trained soldier rather than the savagery of a monster. Every movement is deliberate. Every opening it gives you is intentional.
+
+---
+
+### Final Boss — The Shadow Lord *(flee disabled)*
+
+The entity at the bottom of the dungeon has no body in any conventional sense. What you encounter in the Hollow Throne is a manifestation — a shape the Shadow Lord has assembled to interact with something as limited as a physical being. It is ancient beyond any recorded history, patient beyond any human understanding, and it has been watching you since you set foot on the first staircase.
+
+Every adventurer who descended before you fed it — their fear, their pain, their final desperate hope all converted into something the Shadow Lord could use. It is stronger now than it was when the first skeletons rose. It is stronger than it was when the first goblin heard its whisper and followed it underground. Every failed attempt to stop it has made it more powerful.
+
+You are not the first to reach this chamber. You are the latest in a long line of people who believed they could end this.
+
+The difference, perhaps, is that you have made it this far.
 
 ---
 
